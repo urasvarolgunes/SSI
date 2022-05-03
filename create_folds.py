@@ -3,6 +3,7 @@ from sklearn.model_selection import StratifiedKFold
 from utils import permuteMat
 from sklearn.utils.multiclass import type_of_target
 import numpy as np
+import os
 
 def split_fin_small(embedding_name, dataset_size):
     
@@ -40,15 +41,21 @@ def split_applestore(embedding_name):
             f.write('\n')
             f.write(' '.join(map(str, val_idx.tolist())))
 
-def read_folds(fold, dataset):
+def read_folds(dataset, embedding_name, fold):
     '''
     Reads previously saved train and validation indices.
     First line contains train idx, second line contains train idx.
     '''
-    pass
+    with open(os.path.join('saved_folds', f'{dataset}_{embedding_name}_{fold}')) as f:
+        train_idx = f.readline().split(' ')
+        val_idx = f.readline().split(' ')
+        train_idx = list(map(int, train_idx))
+        val_idx = list(map(int, val_idx))
+
+    return train_idx, val_idx
 
 if __name__ == "__main__":
-
+    
     for embedding_name in ['google','glove','fast']:
         for dataset_size in ['small','large']:
             split_fin_small(embedding_name, dataset_size)
@@ -56,4 +63,6 @@ if __name__ == "__main__":
     #fast contains insufficient number of training samples
     for embedding_name in ['google','glove']:    
         split_applestore(embedding_name)
+    
+    read_folds(dataset='fin_small',embedding_name='google', fold=0)
     

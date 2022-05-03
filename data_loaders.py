@@ -11,6 +11,7 @@ warnings.simplefilter("ignore")
 
 from utils import permuteMat
 import os
+from create_folds import read_folds
 
 def parse_index_file(filename):
     """Parse index file."""
@@ -26,7 +27,7 @@ def sample_mask(idx, l):
     mask[idx] = 1
     return np.array(mask, dtype=np.bool)
 
-def load_applestore_data(dataset_str, train_use_ratio=0):
+def load_applestore_data(dataset_str, train_use_ratio=0, fold=0):
 
     _, embed_name = dataset_str.split('_')
     
@@ -46,10 +47,9 @@ def load_applestore_data(dataset_str, train_use_ratio=0):
     labels_numpy = labels.copy().values
     nclasses = labels.shape[1]
     
-    p, num_rows, train_ratio = len(semanticInter), labels.shape[0], 0.95
-    idx_train = range(0,p)
+    p, num_rows, train_ratio = len(semanticInter), labels.shape[0], 0.0
+    idx_train, idx_val = read_folds(dataset='applestore', embedding_name=embed_name, fold=fold)
     idx_test = range(p, num_rows)
-    val_mask = None
         
     if train_use_ratio != 0:
         thres_row = int(train_use_ratio*num_rows)
@@ -57,15 +57,16 @@ def load_applestore_data(dataset_str, train_use_ratio=0):
         p = thres_row # p is later used for KNN evaluation, need to change it when trimming some training data
         idx_train = range(0, thres_row)
         idx_test = range(thres_row, num_rows)
-        val_mask = None
         
     train_mask = sample_mask(idx_train, num_rows)
     test_mask = sample_mask(idx_test, num_rows)
+    val_mask = sample_mask(idx_val, num_rows)
     
     features = torch.FloatTensor(features.values)
     labels = torch.FloatTensor(labels.values)
     train_mask = torch.BoolTensor(train_mask)    
     test_mask = torch.BoolTensor(test_mask)
+    val_mask = torch.BoolTensor(val_mask)
     
     '''
     print('train: {}, val: {}, test: {}'.format(train_mask.sum(), 0, test_mask.sum()))
@@ -73,7 +74,7 @@ def load_applestore_data(dataset_str, train_use_ratio=0):
     
     return features, nfeats, labels, nclasses, train_mask, val_mask, test_mask, (labels_numpy, class_labels, p)
     
-def load_finance_data(dataset_str, train_use_ratio=0, use_validation = False):
+def load_finance_data(dataset_str, train_use_ratio=0, use_validation = False, fold=0):
 
     _, dataset_size, embed_name = dataset_str.split('_')
     
@@ -97,7 +98,8 @@ def load_finance_data(dataset_str, train_use_ratio=0, use_validation = False):
     nclasses = labels.shape[1]
     
     p, num_rows, train_ratio = len(semanticInter), labels.shape[0], 0.95
-    idx_train = range(0,p)
+    #idx_train = range(0,p)
+    idx_train, idx_val = read_folds(fold=fold, dataset=f'fin_{dataset_size}', embedding_name=embed_name)
     idx_test = range(p, num_rows)
     val_mask = None
     
