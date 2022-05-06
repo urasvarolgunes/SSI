@@ -35,18 +35,17 @@ def split_applestore(embedding_name):
     last_train_index = len(semanticInter)
     kf = StratifiedKFold(n_splits=5)
     for fold_num, (train_idx,val_idx) in enumerate(kf.split(X=aff[:last_train_index], y=targets[:last_train_index])):
-        print([np.unique(targets[train_idx], return_counts=True)], np.unique(targets[val_idx], return_counts=True))
         with open('saved_folds/applestore_{}_{}'.format(embedding_name, fold_num), 'w') as f:
             f.write(' '.join(map(str, train_idx.tolist())))
             f.write('\n')
             f.write(' '.join(map(str, val_idx.tolist())))
 
-def read_folds(dataset, embedding_name, fold):
+def read_folds(dataset_str, fold):
     '''
     Reads previously saved train and validation indices.
     First line contains train idx, second line contains train idx.
     '''
-    with open(os.path.join('saved_folds', f'{dataset}_{embedding_name}_{fold}')) as f:
+    with open(os.path.join('saved_folds', f'{dataset_str}_{fold}')) as f:
         train_idx = f.readline().split(' ')
         val_idx = f.readline().split(' ')
         train_idx = list(map(int, train_idx))

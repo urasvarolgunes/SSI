@@ -41,14 +41,19 @@ class GCN_S(nn.Module):
         self.mlp_epochs = mlp_epochs
         self.sparse = sparse
 
-        if gen_mode == 0:
-            self.graph_gen = FullParam(features, non_linearity, k, knn_metric, sparse).to(device)
-        elif gen_mode == 1:
+        if gen_mode == 1:
             self.graph_gen = MLP(2, features.shape[1], math.floor(math.sqrt(features.shape[1] * self.mlp_h)),
                                  self.mlp_h, mlp_epochs, k, knn_metric, self.non_linearity, self.sparse, mlp_act).to(device)
         elif gen_mode == 2:
-            self.graph_gen = MLP_Diag(2, features.shape[1], k, knn_metric, self.non_linearity, sparse,
-                                      mlp_act, num_anchor, device=device).to(device)
+            self.graph_gen = MLP_Diag(nlayers=2,
+                                    isize=features.shape[1],
+                                    k=k,
+                                    knn_metric=knn_metric,
+                                    non_linearity=self.non_linearity,
+                                    sparse=sparse,
+                                    mlp_act=mlp_act,
+                                    num_anchor=num_anchor,
+                                    device=device).to(device)
 
     def get_adj(self, h):
         Adj_ = self.graph_gen(h)
@@ -57,7 +62,7 @@ class GCN_S(nn.Module):
             Adj_ = normalize(Adj_, self.normalization, self.sparse)
         return Adj_
 
-    def forward(self, features, x):  # x corresponds to masked_fearures
+    def forward(self, features, x):  # x corresponds to masked_features
         Adj_ = self.get_adj(features)
         if self.sparse:
             Adj = Adj_
@@ -78,10 +83,10 @@ class GCN(nn.Module):
         self.layers = nn.ModuleList()
 
         if sparse:
-            self.layers.append(GCNConv(in_channels, hidden_channels))
+            self.layers.append(GCNConv_dgl(in_channels, hidden_channels))
             for _ in range(num_layers - 2):
-                self.layers.append(GCNConv(hidden_channels, hidden_channels))
-            self.layers.append(GCNConv(hidden_channels, out_channels))
+                self.layers.append(GCNConv_dgl(hidden_channels, hidden_channels))
+            self.layers.append(GCNConv_dgl(hidden_channels, out_channels))
         else:
             self.layers.append(GCNConv_dense(in_channels, hidden_channels))
             for i in range(num_layers - 2):
