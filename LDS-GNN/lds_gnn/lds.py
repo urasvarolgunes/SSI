@@ -251,11 +251,13 @@ def main(data, method, seed, missing_percentage):
 
     if method == 'knnlds':
         configs = KNNLDSConfig.grid(pat=20,
-                                    seed=seed, io_steps=[5, 16],
-                                    keep_prob=[0.5, 0.75 , 1.0],
-                                    io_lr=[1e-3, 1e-4],
-                                    oo_lr=[1e-3, 1e-4],
-                                    metric=['cosine', 'minkowski'], k=[10, 20])
+                                    seed=seed, io_steps=[5],
+                                    keep_prob=[1.0, 0.75, 0.5],
+                                    io_lr=[1e-3],
+                                    oo_lr=[1e-3],
+                                    metric=['cosine'],
+                                    k=[10,20],
+                                    l2_reg=[1e-7])
     best_valid_acc = -math.inf
     best_test_acc = -math.inf
     best_preds = None
@@ -272,13 +274,13 @@ def main(data, method, seed, missing_percentage):
             best_test_acc = test_acc
             best_preds = test_preds
         print('Test accuracy of the best found model:', best_test_acc)
-        
+
         print('INTERMEDIATE KNN RESULT: ')
         knn_result = test_KNN(test_preds, ys, class_labels, train_mask, test_mask, val_mask, test_on_val=False, N=[10])
         print(knn_result)
     
     print('BEST KNN RESULT: ')
-    knn_result = test_KNN(best_preds, ys, class_labels, train_mask, test_mask, val_mask, test_on_val=False, N=[10])
+    knn_result = test_KNN(best_preds, ys, class_labels, train_mask, test_mask, val_mask, test_on_val=False, N=[2,5,8,10,15,20,30])
     print(knn_result)
         
 if __name__ == '__main__':
