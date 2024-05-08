@@ -1,5 +1,6 @@
 # Embedding-Imputation-with-Self-Supervised-GNNs
-
+Official repository for the paper "Embedding Imputation with Self-Supervised GNNs
+Link: https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10173511
 
 ## Datasets
 
