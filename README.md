@@ -17,14 +17,12 @@ Link: https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10173511
 * [`scipy`](https://www.scipy.org/) version 1.2.1
 * [`torch-geometric`](https://github.com/rusty1s/pytorch_geometric) 1.6.1
 
+CUDA version is 11.3
 You can create a virtual environment and install all the dependencies with the following command:
 
 ```bash
 conda env create -f environment.yml
 ```
-
-The file `requirements.txt` was written for CUDA 11.3 and Linux so you may need to adapt it to your infrastructure.
-
 ## Usage
 
 To run the model you should define the following parameters:
