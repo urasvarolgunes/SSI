@@ -1,5 +1,5 @@
 # Embedding-Imputation-with-Self-Supervised-GNNs
-Official repository for the paper "Embedding Imputation with Self-Supervised GNNs <br />
+Official repository for "Embedding Imputation with Self-Supervised GNNs". <br />
 Link: https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10173511
 
 ## Datasets
@@ -112,4 +112,19 @@ python main_applestore.py -dataset=applestore_google -epochs_adj=400 -dropout1=0
 
 ```bash
 python main_applestore.py -dataset=applestore_glove -epochs_adj=400 -dropout1=0 -dropout2=0 -dropout_adj1=0 -dropout_adj2=0 -w_decay=0 -lambda_=1 -ratio=5 -lr=1e-3 -lr_adj=1e-3 -nlayers=2 -nlayers_adj=2 -hidden=600 -hidden_adj=600 -mlp_h=300 -k=20 -sparse 1 -non_linearity=relu -mlp_act=tanh -epoch_d=5
+```
+## Citation
+If you find the work useful please consider citing us.
+
+```
+@ARTICLE{10173511,
+  author={Varolgunes, Uras and Yao, Shibo and Ma, Yao and Yu, Dantong},
+  journal={IEEE Access}, 
+  title={Embedding Imputation With Self-Supervised Graph Neural Networks}, 
+  year={2023},
+  volume={11},
+  number={},
+  pages={70610-70620},
+  keywords={Embedded systems;Graph neural networks;Natural language processing;Embedded systems;Self-supervised learning;Embedding imputation;graph neural networks;natural language processing},
+  doi={10.1109/ACCESS.2023.3292314}}
 ```
