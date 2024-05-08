@@ -1,5 +1,5 @@
-# Embedding-Imputation-with-Self-Supervised-GNNs
-Official repository for "Embedding Imputation with Self-Supervised GNNs". <br />
+# Embedding Imputation with Self-Supervised Graph Neural Networks
+Official repository for "Embedding Imputation with Self-Supervised Graph Neural Networks". <br />
 Link: https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10173511
 
 ## Datasets
